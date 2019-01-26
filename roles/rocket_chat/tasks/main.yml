@@ -1,3 +1,31 @@
 
+- name: update repositories cache
+  apt:
+     update_cache: yes
+
 - name: install rocket chat
   command: snap install rocketchat-server
+
+- iptables:
+    table: nat
+    chain: PREROUTING
+    in_interface: "{{ primary_network_interface }}"
+    protocol: tcp
+    match: tcp
+    destination_port: 80
+    jump: REDIRECT
+    to_ports: 3000
+    comment: redirect web traffic to port 3000
+  become: yes
+
+- name: install dependencies
+  apt:
+     name: "{{ packages }}"
+  vars:
+     packages:
+      - iptables-persistent
+
+- name: install rocket chat
+  command: iptables-save
+
+
