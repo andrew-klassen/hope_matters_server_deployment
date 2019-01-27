@@ -1,0 +1,71 @@
+- apt_repository:
+    repo: ppa:ondrej/php
+
+- name: update repositories cache
+  apt:
+     update_cache: yes
+
+- name: install dependencies
+  apt:
+     name: "{{ packages }}"
+  vars:
+     packages:
+      - mysql-server
+      - apache2
+      - libapache2-mod-php5.6
+      - php5.6
+      - php5.6-fpm
+      - php5.6-imap
+      - php5.6-apcu
+      - php5.6-intl
+      - php5.6-cgi
+      - php5.6-common
+      - php5.6-mbstring
+      - php5.6-gd
+      - php5.6-mysql
+      - php5.6-gettext
+      - php5.6-bcmath
+      - php5.6-xml
+      - wget
+      - unzip
+      - python-mysqldb
+
+- name: create osticket database
+  mysql_db:
+    name: osticket_db
+    state: present
+
+- mysql_user:
+    name: "{{ osticket_user }}"
+    host: localhost
+    password: "{{ osticket_password }}"
+    priv: 'osticket_db.*:ALL'
+    state: present
+
+- name: start apache
+  service:
+    name: apache2
+    enabled: yes
+    state: started 
+
+- name: download and unpack osticket
+  unarchive:
+    src: https://github.com/osTicket/osTicket/releases/download/v1.10.4/osTicket-v1.10.4.zip
+    dest: /var/www/html
+    remote_src: yes
+
+- template:
+    src: source_code/000-default.conf.osticket
+    dest: /etc/apache2/sites-available/000-default.conf
+
+- name: move osticket config
+  shell: |
+    #!/bin/bash
+    
+    cp /var/www/html/upload/include/ost-sampleconfig.php /var/www/html/upload/include/ost-config.php
+    chmod 0666 /var/www/html/upload/include/ost-config.php
+
+- name: reload apache
+  service:
+    name: apache2
+    state: reloaded
