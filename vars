@@ -1,7 +1,7 @@
 git_lab_url: 127.0.0.1
 media_wiki_password: P@ssword123
 media_wiki_user: wiki_user
-ip_address: 10.0.0.125
+ip_address: 10.0.0.200
 primary_network_interface: enp0s3 
 osticket_user: osticket
 osticket_password: P@ssword123

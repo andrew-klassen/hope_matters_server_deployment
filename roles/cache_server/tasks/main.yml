@@ -1,0 +1,16 @@
+
+- name: update repositories cache
+  apt:
+     update_cache: yes
+
+- name: install dependencies
+  apt:
+     name: "{{ packages }}"
+  vars:
+     packages:
+      - apt-cacher-ng
+
+- template:
+    src: source_code/02proxy
+    dest: /etc/apt/apt.conf.d/02proxy
+
