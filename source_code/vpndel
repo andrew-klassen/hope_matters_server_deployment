@@ -1,0 +1,36 @@
+#!/bin/bash
+
+NUMBEROFCLIENTS=$(tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep -c "^V")
+if [[ "$NUMBEROFCLIENTS" = '0' ]]; then
+	echo
+	echo "You have no existing clients!"
+	exit
+fi
+
+echo
+echo "Select the existing client certificate you want to revoke:"
+tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep "^V" | cut -d '=' -f 2 | nl -s ') '
+if [[ "$NUMBEROFCLIENTS" = '1' ]]; then
+	read -p "Select one client [1]: " CLIENTNUMBER
+else
+	read -p "Select one client [1-$NUMBEROFCLIENTS]: " CLIENTNUMBER
+fi
+CLIENT=$(tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep "^V" | cut -d '=' -f 2 | sed -n "$CLIENTNUMBER"p)
+echo
+REVOKE='y'
+if [[ "$REVOKE" = 'y' || "$REVOKE" = 'Y' ]]; then
+	cd /etc/openvpn/easy-rsa/
+	./easyrsa --batch revoke $CLIENT
+	EASYRSA_CRL_DAYS=3650 ./easyrsa gen-crl
+	rm -f pki/reqs/$CLIENT.req
+	rm -f pki/private/$CLIENT.key
+	rm -f pki/issued/$CLIENT.crt
+	rm -f /etc/openvpn/crl.pem
+	cp /etc/openvpn/easy-rsa/pki/crl.pem /etc/openvpn/crl.pem
+	# CRL is read with each client connection, when OpenVPN is dropped to nobody
+	chown nobody:$GROUPNAME /etc/openvpn/crl.pem
+else
+	echo
+	echo "Certificate revocation for client $CLIENT aborted!"
+fi
+exit 0

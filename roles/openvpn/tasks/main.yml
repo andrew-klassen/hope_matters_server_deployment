@@ -1,0 +1,31 @@
+
+- name: update repositories cache
+  apt:
+     update_cache: yes
+
+- name: install openvpn
+  script: source_code/openvpn_install.sh {{ vpn_private_ip }} {{ vpn_public_ip }}
+
+- name: start and enable the openvpn service
+  service:
+    name: openvpn@server
+    state: started
+    enabled: yes
+     
+- name: add vpnadd tool
+  copy:
+    src: source_code/vpnadd
+    dest: /usr/bin/vpnadd
+    owner: root
+    group: root
+    mode: 0700
+
+- name: add vpndel tool
+  copy:
+    src: source_code/vpndel
+    dest: /usr/bin/vpndel
+    owner: root
+    group: root
+    mode: 0700
+
+
