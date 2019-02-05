@@ -66,6 +66,22 @@
     src: source_code/hope_matters_logo.png
     dest: /var/www/html/mediawiki/mediawiki-1.32.0/hope_matters_logo.png
 
+- name: copy database dump file
+  copy:
+    src: source_code/wiki_db.sql
+    dest: /tmp
+
+- name: import database schema
+  mysql_db:
+    name: my_wiki
+    state: import
+    target: /tmp/wiki_db.sql
+
+- name: add backed-up images
+  synchronize:
+    src: source_code/wiki_images/
+    dest: /var/www/html/mediawiki/mediawiki-1.32.0/images/
+
 - template:
     src: source_code/LocalSettings.php
     dest: /var/www/html/mediawiki/mediawiki-1.32.0/LocalSettings.php
