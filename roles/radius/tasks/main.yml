@@ -1,0 +1,99 @@
+
+- name: update repositories cache
+  apt:
+     update_cache: yes
+
+- name: install dependencies
+  apt:
+     name: "{{ packages }}"
+  vars:
+     packages:
+      - unzip
+      - wget
+      - freeradius
+      - freeradius-mysql
+      - freeradius-utils
+      - php-common
+      - php-gd
+      - php-curl
+      - php-mysql
+      - mysql-server
+      - mysql-client
+      - apache2
+      - php
+      - libapache2-mod-php
+      - php-gd
+      - php-mail
+      - php-mail-mime
+      - php-pear
+      - php-db
+      - python-mysqldb
+
+- name: create radius database
+  mysql_db:
+    name: radius
+    state: present
+
+- mysql_user:
+    name: "{{ radius_user }}"
+    host: localhost
+    password: "{{ radius_password }}"
+    priv: 'radius.*:ALL'
+    state: present
+
+- name: copy database dump
+  copy:
+    src: source_code/mysql-daloradius.sql
+    dest: /tmp
+
+- name: import database schema pre
+  mysql_db:
+    name: radius
+    state: import
+    target: /etc/freeradius/3.0/mods-config/sql/main/mysql/schema.sql
+  ignore_errors: yes
+
+- name: import database schema
+  mysql_db:
+    name: radius
+    state: import
+    target: /tmp/mysql-daloradius.sql
+
+
+- template:
+    src: source_code/sql
+    dest: /etc/freeradius/3.0/mods-enabled/sql
+
+- copy:
+    src: source_code/default
+    dest: /etc/freeradius/3.0/sites-available/default
+
+- name: download and upzip daloradius
+  unarchive:
+    src: https://github.com/lirantal/daloradius/archive/master.zip
+    dest: /var/www/html/
+    remote_src: yes
+
+- name: rename daloradius-master
+  command: mv /var/www/html/daloradius-master /var/www/html/daloradius
+  ignore_errors: yes
+
+- template:
+    src: source_code/daloradius.conf.php
+    dest: /var/www/html/daloradius/library/daloradius.conf.php
+
+- copy:
+    src: source_code/index.php
+    dest: /var/www/html/index.php
+
+- file:
+    path: /var/www/html/index.html
+    state: absent
+
+- name: reload apache
+  service:
+    name: apache2
+    state: reloaded
+
+
+
