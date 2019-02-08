@@ -8,6 +8,7 @@
      name: "{{ packages }}"
   vars:
      packages:
+      - unzip
       - apache2
       - mysql-server
       - php
@@ -82,6 +83,12 @@
     src: source_code/wiki_images/
     dest: /var/www/html/mediawiki/mediawiki-1.32.0/images/
 
+- file:
+    path: /var/www/html/mediawiki/mediawiki-1.32.0/images/
+    owner: root
+    group: root
+    mode: 0777
+
 - template:
     src: source_code/LocalSettings.php
     dest: /var/www/html/mediawiki/mediawiki-1.32.0/LocalSettings.php
@@ -92,11 +99,19 @@
     dest: /var/www/html/mediawiki/mediawiki-1.32.0/extensions/
     remote_src: yes
 
+- name: change embedvideo name
+  command: mv /var/www/html/mediawiki/mediawiki-1.32.0/extensions/mediawiki-embedvideo-2.7.4 /var/www/html/mediawiki/mediawiki-1.32.0/extensions/EmbedVideo
+  ignore_errors: yes
+
 - name: download and unpack syntaxhighlight extention
   unarchive:
     src: https://codeload.github.com/wikimedia/mediawiki-extensions-SyntaxHighlight_GeSHi/tar.gz/master
     dest: /var/www/html/mediawiki/mediawiki-1.32.0/extensions/
     remote_src: yes
+
+- name: change syntaxhighlight name
+  command: mv /var/www/html/mediawiki/mediawiki-1.32.0/extensions/mediawiki-extensions-SyntaxHighlight_GeSHi-master /var/www/html/mediawiki/mediawiki-1.32.0/extensions/SyntaxHighlight_GeSHi
+  ignore_errors: yes
 
 - name: (deb) find the php.ini
   shell: | 
