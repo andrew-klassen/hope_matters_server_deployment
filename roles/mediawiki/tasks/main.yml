@@ -88,6 +88,7 @@
     owner: root
     group: root
     mode: 0777
+    recurse: yes
 
 - template:
     src: source_code/LocalSettings.php
