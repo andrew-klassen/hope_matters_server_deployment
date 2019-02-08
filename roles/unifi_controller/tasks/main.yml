@@ -1,0 +1,56 @@
+
+- name: ubiquity key
+  apt_key:
+    url: https://dl.ui.com/unifi/unifi-repo.gpg 
+    state: present
+
+- name: mongodb key
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: 0C49F3730359A14518585931BC711F9BA15703C6
+
+- apt_repository:
+    repo: deb http://www.ui.com/downloads/unifi/debian stable ubiquiti
+    state: present
+    filename: 100-ubnt-unifi.list
+
+- apt_repository:
+    repo: deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse
+    state: present
+    filename: mongodb-org-3.4.list
+
+- name: update repositories cache
+  apt:
+     update_cache: yes
+
+- name: install dependencies
+  apt:
+     name: "{{ packages }}"
+  vars:
+     packages:
+      - apt-transport-https
+      - unifi
+      - iptables-persistent
+
+- iptables:
+    table: nat
+    chain: PREROUTING
+    in_interface: "{{ primary_network_interface }}"
+    protocol: tcp
+    match: tcp
+    destination_port: 443
+    jump: REDIRECT
+    to_ports: 8443
+    comment: redirect web traffic to port 8443
+  become: yes
+
+- name: install dependencies
+  apt:
+     name: "{{ packages }}"
+  vars:
+     packages:
+      - iptables-persistent
+
+- name: save forwarding rule
+  command: iptables-save
+

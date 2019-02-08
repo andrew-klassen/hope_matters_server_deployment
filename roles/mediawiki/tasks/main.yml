@@ -86,7 +86,38 @@
     src: source_code/LocalSettings.php
     dest: /var/www/html/mediawiki/mediawiki-1.32.0/LocalSettings.php
 
+- name: download and unpack EmbedVideo extention
+  unarchive:
+    src: https://codeload.github.com/HydraWiki/mediawiki-embedvideo/zip/v2.7.4
+    dest: /var/www/html/mediawiki/mediawiki-1.32.0/extensions/
+    remote_src: yes
+
+- name: download and unpack syntaxhighlight extention
+  unarchive:
+    src: https://codeload.github.com/wikimedia/mediawiki-extensions-SyntaxHighlight_GeSHi/tar.gz/master
+    dest: /var/www/html/mediawiki/mediawiki-1.32.0/extensions/
+    remote_src: yes
+
+- name: (deb) find the php.ini
+  shell: | 
+      #!/bin/bash
+      find /etc -name php.ini | grep 'apache'
+  register: php_ini
+
+  # increase the max size allowed for file uploads
+- lineinfile:
+    path: "{{ php_ini.stdout }}"
+    regexp: '^post_max_size ='
+    line: 'post_max_size = 20000M'
+
+- lineinfile:
+    path: "{{ php_ini.stdout }}"
+    regexp: '^upload_max_filesize ='
+    line: 'upload_max_filesize = 20000M'
+
 - name: reload apache
   service:
     name: apache2
     state: reloaded
+
+
