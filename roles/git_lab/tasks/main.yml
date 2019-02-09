@@ -18,5 +18,4 @@
       #!/bin/bash
 
       curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
-      EXTERNAL_URL="http://{{ git_lab_url }}" apt-get install gitlab-ee
-
+      EXTERNAL_URL="{{ git_lab_url }}" apt-get install gitlab-ee
