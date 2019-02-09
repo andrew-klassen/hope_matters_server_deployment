@@ -1,0 +1,28 @@
+
+- name: update repositories cache
+  apt:
+     update_cache: yes
+
+- name: install dependencies
+  apt:
+     name: "{{ packages }}"
+  vars:
+     packages:
+      - bind9
+      - bind9utils
+      - bind9-doc
+
+- name: copy bind ipv4 only
+  copy:
+    src: source_code/bind9
+    dest: /etc/default/bind9
+
+- name: sync bind9 config
+  synchronize:
+    src: source_code/bind/
+    dest: /etc/bind/
+
+- name: restart bind9
+  service:
+    name: bind9
+    state: restarted

@@ -1,0 +1,34 @@
+
+- name: update repositories cache
+  apt:
+     update_cache: yes
+
+- name: install dependencies
+  apt:
+     name: "{{ packages }}"
+  vars:
+     packages:
+      - samba
+
+- copy:
+    src: source_code/smb.conf
+    dest: /etc/samba/smb.conf
+
+- file:
+    path: /share
+    owner: nobody
+    group: nogroup
+    state: directory
+    mode: "u=rwx,g=rwxs,o=rwx"
+    recurse: yes
+
+
+- name: restart smbd
+  service:
+    name: smbd
+    state: restarted
+
+- name: restart nmbd
+  service:
+    name: nmbd
+    state: restarted
