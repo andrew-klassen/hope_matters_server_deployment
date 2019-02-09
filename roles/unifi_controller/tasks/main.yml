@@ -52,5 +52,5 @@
       - iptables-persistent
 
 - name: save forwarding rule
-  command: iptables-save
+  command: netfilter-persistent save
 

@@ -25,7 +25,5 @@
      packages:
       - iptables-persistent
 
-- name: install rocket chat
-  command: iptables-save
-
-
+- name: save forwarding rule
+  command: netfilter-persistent save
