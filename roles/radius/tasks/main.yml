@@ -46,6 +46,11 @@
     src: source_code/mysql-daloradius.sql
     dest: /tmp
 
+- name: copy vlan info
+  copy:
+    src: source_code/vlan_info_radius.sql
+    dest: /tmp
+
 - name: import database schema pre
   mysql_db:
     name: radius
@@ -58,15 +63,30 @@
     name: radius
     state: import
     target: /tmp/mysql-daloradius.sql
+  ignore_errors: yes
 
+- name: import vlan data
+  mysql_db:
+    name: radius
+    state: import
+    target: /tmp/vlan_info_radius.sql
+  ignore_errors: yes
 
 - template:
     src: source_code/sql
     dest: /etc/freeradius/3.0/mods-enabled/sql
 
+- template:
+    src: source_code/clients.conf
+    dest: /etc/freeradius/3.0/clients.conf
+
 - copy:
     src: source_code/default
     dest: /etc/freeradius/3.0/sites-available/default
+
+- copy:
+    src: source_code/inner-tunnel
+    dest: /etc/freeradius/3.0/sites-enabled/inner-tunnel
 
 - name: download and upzip daloradius
   unarchive:
@@ -95,5 +115,8 @@
     name: apache2
     state: reloaded
 
-
-
+- name: enable freeradius
+  service:
+    name: freeradius
+    state: started
+    enabled: yes
