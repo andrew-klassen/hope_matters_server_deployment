@@ -10,3 +10,4 @@ vpn_public_ip: 8.8.8.8
 vpn_private_ip: 192.168.1.1
 radius_user: radius
 radius_password: radiuspassword
+radius_ap_secret: P@ssword123
