@@ -12,6 +12,22 @@ $TTL	86400
 			  86400 )	; Negative Cache TTL
 ;
 
-@	IN	NS	dns
-dns	IN	A	10.0.0.200
-test	IN	A	10.5.5.5
+@		IN	NS	dns
+dns		IN	A	10.2.0.6
+switch-hospital	IN	A	10.2.0.1
+support		IN	A	10.2.0.15
+radius		IN	A	10.2.0.4
+controller	IN	A	10.2.0.5
+chat		IN	A	10.2.0.16
+wiki		IN	A	10.2.0.204
+xenserver	IN	A	10.2.0.17
+gitlab		IN	A	10.2.0.18
+
+ap-1		IN	A	10.2.0.7
+ap-2		IN	A	10.2.0.8
+ap-3		IN	A	10.2.0.9
+ap-4		IN	A	10.2.0.10
+ap-5		IN	A	10.2.0.11
+ap-6		IN	A	10.2.0.12
+ap-7		IN	A	10.2.0.13
+ap-8		IN	A	10.2.0.14

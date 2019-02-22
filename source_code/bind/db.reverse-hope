@@ -13,5 +13,21 @@ $TTL	86400
 ;
 
 @		IN	NS	dns.hope.
-200.0.0		IN	PTR	dns.hope.
-5.5.5		IN	PTR	test.hope.
+6.0.2		IN	PTR	dns.hope.
+1.0.2		IN	PTR	switch-hopital.hope.
+15.0.2		IN	PTR	support.hope.
+4.0.2		IN	PTR	radius.hope.
+5.0.2		IN	PTR	controller.hope.
+16.0.2		IN	PTR	chat.hope.
+204.0.2		IN	PTR	wiki.hope.
+17.0.2		IN	PTR	xenserver.hope.
+18.0.2		IN	PTR	gitlab.hope.
+
+7.0.2		IN	PTR	ap-1.hope.
+8.0.2		IN	PTR	ap-2.hope.
+9.0.2		IN	PTR	ap-3.hope.
+10.0.2		IN	PTR	ap-4.hope.
+11.0.2		IN	PTR	ap-5.hope.
+12.0.2		IN	PTR	ap-6.hope.
+13.0.2		IN	PTR	ap-7.hope.
+14.0.2		IN	PTR	ap-8.hope.
