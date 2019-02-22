@@ -118,5 +118,5 @@
 - name: enable freeradius
   service:
     name: freeradius
-    state: started
+    state: restarted
     enabled: yes
