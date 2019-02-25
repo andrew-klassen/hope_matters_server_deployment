@@ -1,13 +1,13 @@
-git_lab_url: http://10.0.0.200
+git_lab_url: http://gitlab.hope
 media_wiki_password: P@ssword123
 media_wiki_user: wiki_user
 ip_address: wiki.hope
-primary_network_interface: enp0s3 
+primary_network_interface: eth0
 osticket_user: osticket
 osticket_password: P@ssword123
-server_hostname: osticket
+server_hostname: support.hope
 vpn_public_ip: 8.8.8.8
 vpn_private_ip: 192.168.1.1
 radius_user: radius
 radius_password: radiuspassword
-radius_ap_secret: secret
+radius_ap_secret: radiussecret
