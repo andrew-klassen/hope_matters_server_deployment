@@ -33,3 +33,5 @@ ap-5		IN	A	10.2.0.11
 ap-6		IN	A	10.2.0.12
 ap-7		IN	A	10.2.0.13
 ap-8		IN	A	10.2.0.14
+airfiber-1	IN	A	10.2.0.24
+airfiber-2	IN	A	10.2.0.25

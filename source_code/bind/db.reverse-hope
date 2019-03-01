@@ -33,3 +33,5 @@ $TTL	86400
 12.0.2		IN	PTR	ap-6.hope.
 13.0.2		IN	PTR	ap-7.hope.
 14.0.2		IN	PTR	ap-8.hope.
+24.0.2		IN	PTR	airfiber-1.hope.
+25.0.2		IN	PTR	airfiber-2.hope.
